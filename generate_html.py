@@ -3,14 +3,18 @@ import json
 with open('quiz_data.json', 'r', encoding='utf-8') as f:
     quiz_data = json.load(f)
 
+with open('no_ball_paheliyan.json', 'r', encoding='utf-8') as f:
+    no_ball_data = json.load(f)
+
 quiz_json_str = json.dumps(quiz_data, ensure_ascii=False)
+noball_json_str = json.dumps(no_ball_data, ensure_ascii=False)
 
 html_content = f"""<!DOCTYPE html>
 <html lang="hi" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏏 जैन क्रिकेट क्विज़ (Jain Cricket Quiz) - 45 विषय</title>
+  <title>🏏 जैन क्रिकेट क्विज़ (Jain Cricket Quiz) - 45 विषय व नो बॉल</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -50,6 +54,10 @@ html_content = f"""<!DOCTYPE html>
       --run6-color: #fb923c;
       --run6-bg: rgba(251, 146, 60, 0.12);
       --run6-border: rgba(251, 146, 60, 0.35);
+
+      --noball-color: #f43f5e;
+      --noball-bg: rgba(244, 63, 94, 0.12);
+      --noball-border: rgba(244, 63, 94, 0.35);
 
       --ans-bg: rgba(255, 255, 255, 0.04);
       --ans-border: rgba(255, 255, 255, 0.08);
@@ -92,6 +100,10 @@ html_content = f"""<!DOCTYPE html>
       --run6-color: #ea580c;
       --run6-bg: #fff7ed;
       --run6-border: #fed7aa;
+
+      --noball-color: #e11d48;
+      --noball-bg: #fff1f2;
+      --noball-border: #fecdd3;
 
       --ans-bg: #f8fafc;
       --ans-border: #e2e8f0;
@@ -213,11 +225,26 @@ html_content = f"""<!DOCTYPE html>
       border-color: var(--border-accent);
     }}
 
+    .btn:active {{
+      transform: scale(0.98);
+    }}
+
     .btn-icon-only {{
       width: 38px;
       height: 38px;
       padding: 0;
       border-radius: var(--radius-sm);
+    }}
+
+    .btn-noball {{
+      background: var(--noball-bg);
+      border: 1px solid var(--noball-border);
+      color: var(--noball-color);
+      font-weight: 700;
+    }}
+    .btn-noball:hover {{
+      background: var(--noball-color);
+      color: #ffffff;
     }}
 
     .btn-primary {{
@@ -243,7 +270,7 @@ html_content = f"""<!DOCTYPE html>
       gap: 6px;
     }}
 
-    /* MAIN CONTAINER: LEFT (CONTENT) & RIGHT (NUMBER PANEL) */
+    /* MAIN CONTAINER */
     .app-main {{
       max-width: 1440px;
       margin: 0 auto;
@@ -256,7 +283,7 @@ html_content = f"""<!DOCTYPE html>
       overflow-x: hidden !important;
     }}
 
-    /* LEFT PANEL - TOPIC & QUESTIONS */
+    /* LEFT PANEL */
     .content-panel {{
       flex: 1;
       min-width: 0;
@@ -340,6 +367,7 @@ html_content = f"""<!DOCTYPE html>
       gap: 10px;
       padding-top: 14px;
       border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
     }}
 
     .nav-btn {{
@@ -479,7 +507,7 @@ html_content = f"""<!DOCTYPE html>
       line-height: 1.55;
     }}
 
-    /* RIGHT PANEL - QUESTION NUMBERS GRID (DESKTOP) */
+    /* RIGHT PANEL - QUESTION NUMBERS GRID */
     .sidebar-panel {{
       width: 320px;
       flex-shrink: 0;
@@ -551,7 +579,7 @@ html_content = f"""<!DOCTYPE html>
       box-sizing: border-box;
     }}
 
-    /* VIEW MODE TOGGLE: GRID / LIST */
+    /* VIEW MODE TOGGLE */
     .view-mode-bar {{
       display: flex;
       gap: 6px;
@@ -627,7 +655,6 @@ html_content = f"""<!DOCTYPE html>
       box-sizing: border-box;
     }}
 
-    /* STRICT 5-COLUMN NON-OVERLAPPING GRID */
     .numbers-grid {{
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -729,8 +756,8 @@ html_content = f"""<!DOCTYPE html>
       min-width: 0;
     }}
 
-    /* MOBILE MODAL / SHEET */
-    .mobile-modal-overlay {{
+    /* MODAL OVERLAY & DRAWERS */
+    .modal-overlay {{
       display: none;
       position: fixed;
       top: 0;
@@ -744,7 +771,7 @@ html_content = f"""<!DOCTYPE html>
       transition: opacity 0.2s ease;
     }}
 
-    .mobile-modal-overlay.open {{
+    .modal-overlay.open {{
       display: block;
       opacity: 1;
     }}
@@ -827,6 +854,93 @@ html_content = f"""<!DOCTYPE html>
       box-sizing: border-box;
     }}
 
+    /* NO-BALL MODAL */
+    .noball-modal-dialog {{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      width: 92%;
+      max-width: 680px;
+      max-height: 88vh;
+      background: var(--bg-surface);
+      border: 1px solid var(--noball-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      z-index: 102;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+      box-sizing: border-box;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      opacity: 0;
+    }}
+
+    .noball-modal-dialog.open {{
+      display: flex;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }}
+
+    .noball-modal-list {{
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 4px;
+      margin-top: 10px;
+    }}
+
+    .noball-card-ui {{
+      background: var(--bg-surface-elevated);
+      border: 1.5px dashed var(--noball-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }}
+
+    .noball-card-top {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 6px;
+    }}
+
+    .noball-card-badge {{
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--noball-color);
+    }}
+
+    .noball-rule-tag {{
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-saffron);
+      background: rgba(245, 158, 11, 0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }}
+
+    .noball-q {{
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }}
+
+    .noball-ans {{
+      background: var(--ans-bg);
+      border: 1px solid var(--ans-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent-saffron);
+    }}
+
     /* MOBILE FLOATING BOTTOM BAR */
     .mobile-bottom-nav {{
       display: none;
@@ -856,32 +970,14 @@ html_content = f"""<!DOCTYPE html>
     .mobile-nav-btn {{
       flex: 1;
       padding: 9px 6px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       border-radius: var(--radius-sm);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      box-sizing: border-box;
-    }}
-
-    /* KEYBOARD SHORTCUTS HINT */
-    .kbd-hint {{
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-family: var(--font-en);
-      display: inline-flex;
-      align-items: center;
       gap: 4px;
-    }}
-    .kbd {{
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.72rem;
-      font-weight: 600;
+      box-sizing: border-box;
     }}
 
     /* RESPONSIVE MEDIA QUERIES */
@@ -953,11 +1049,16 @@ html_content = f"""<!DOCTYPE html>
         <div class="brand-icon">🏏</div>
         <div class="brand-text">
           <h1>जैन क्रिकेट क्विज़</h1>
-          <p>45 Topics • 135 Questions Host Console</p>
+          <p>45 Topics • 135 Questions • 6 No-Ball Riddles</p>
         </div>
       </div>
 
       <div class="header-actions">
+        <!-- No-Ball Button -->
+        <button class="btn btn-noball" onclick="toggleNoBallModal(true)" title="नो बॉल ज्ञान पहेलियाँ">
+          <span>⚾ नो बॉल</span>
+        </button>
+
         <!-- Mobile Button to open Numbers Modal -->
         <button id="mobileMenuBtn" class="btn hamburger-btn" aria-label="क्वेश्चन चुनें" onclick="toggleMobileModal(true)">
           <span>☰</span>
@@ -1000,9 +1101,9 @@ html_content = f"""<!DOCTYPE html>
             🎲 रैंडम पर्ची (Random)
           </button>
 
-          <span class="kbd-hint">
-            कीबोर्ड: <span class="kbd">←</span> <span class="kbd">→</span>
-          </span>
+          <button class="btn btn-noball" onclick="toggleNoBallModal(true)" title="नो बॉल ज्ञान पहेलियाँ">
+            ⚾ नो बॉल (6 पहेलियाँ)
+          </button>
 
           <button id="nextBtn" class="btn btn-primary nav-btn" onclick="nextTopic()">
             अगला (Next) →
@@ -1025,6 +1126,9 @@ html_content = f"""<!DOCTYPE html>
             <span>📋 सभी प्रश्न</span>
             <span class="total-count-pill">45 विषय</span>
           </div>
+          <button class="btn btn-noball" style="padding: 3px 8px; font-size: 0.75rem;" onclick="toggleNoBallModal(true)">
+            ⚾ नो बॉल
+          </button>
         </div>
 
         <!-- Topic Hover / Active Preview -->
@@ -1069,6 +1173,9 @@ html_content = f"""<!DOCTYPE html>
       <button class="btn mobile-nav-btn random-btn" onclick="selectRandomTopic()">
         🎲 पर्ची
       </button>
+      <button class="btn mobile-nav-btn btn-noball" onclick="toggleNoBallModal(true)">
+        ⚾ नो बॉल
+      </button>
       <button class="btn hamburger-btn" style="display:inline-flex; flex:1;" onclick="toggleMobileModal(true)">
         ☰ # <span id="mobileTopicNumBtn">1</span>
       </button>
@@ -1079,7 +1186,7 @@ html_content = f"""<!DOCTYPE html>
   </div>
 
   <!-- MOBILE NUMBERS MODAL / DRAWER -->
-  <div id="mobileModalOverlay" class="mobile-modal-overlay" onclick="toggleMobileModal(false)"></div>
+  <div id="mobileModalOverlay" class="modal-overlay" onclick="closeAllModals()"></div>
   <div id="mobileModal" class="mobile-modal">
     <div class="modal-drag-pill"></div>
     <div class="modal-header">
@@ -1119,14 +1226,32 @@ html_content = f"""<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- NO-BALL MODAL DIALOG (FOR HOST VIEWING ANSWERS) -->
+  <div id="noBallModal" class="noball-modal-dialog">
+    <div class="modal-header">
+      <div class="modal-title" style="color: var(--noball-color);">
+        <span>⚾</span>
+        <span>नो बॉल (No Ball) - 6 ज्ञान पहेलियाँ</span>
+      </div>
+      <button class="modal-close-btn" onclick="toggleNoBallModal(false)" aria-label="बंद करें">✕</button>
+    </div>
+    <div style="font-size: 0.82rem; color: var(--text-secondary); padding-bottom: 6px; border-bottom: 1px solid var(--border-subtle);">
+      📌 <b>नियम:</b> नो बॉल = 1 रन | पहेली का सही उत्तर देने पर = 2 रन (बोनस / फ्री-हिट)
+    </div>
+    <div id="noBallModalList" class="noball-modal-list">
+      <!-- Rendered dynamically -->
+    </div>
+  </div>
+
   <!-- EMBEDDED DATA SCRIPT -->
   <script>
     const QUIZ_DATA = {quiz_json_str};
+    const NO_BALL_DATA = {noball_json_str};
 
     // APPLICATION STATE
     let currentIndex = 0;
     let searchQuery = '';
-    let currentViewMode = 'grid'; // 'grid' | 'list'
+    let currentViewMode = 'grid';
     let mobileViewMode = 'grid';
 
     // DOM ELEMENTS
@@ -1147,6 +1272,8 @@ html_content = f"""<!DOCTYPE html>
     
     const mobileModalOverlay = document.getElementById('mobileModalOverlay');
     const mobileModal = document.getElementById('mobileModal');
+    const noBallModal = document.getElementById('noBallModal');
+    const noBallModalList = document.getElementById('noBallModalList');
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -1164,6 +1291,7 @@ html_content = f"""<!DOCTYPE html>
 
       renderAllSelectors();
       renderCurrentTopic();
+      renderNoBallModal();
       setupKeyboardNavigation();
     }}
 
@@ -1174,7 +1302,6 @@ html_content = f"""<!DOCTYPE html>
 
       localStorage.setItem('jain_quiz_idx', currentIndex);
 
-      // Topic Meta
       topicBadge.textContent = `विषय ${{topic.number}}`;
       topicTitle.textContent = topic.title;
       sprintBadge.textContent = topic.sprint || `Sprint`;
@@ -1184,11 +1311,9 @@ html_content = f"""<!DOCTYPE html>
       if (desktopPreviewBar) desktopPreviewBar.textContent = `विषय ${{topic.number}}: ${{topic.title}}`;
       if (mobilePreviewBar) mobilePreviewBar.textContent = `वर्तमान: विषय ${{topic.number}} - ${{topic.title}}`;
 
-      // Buttons
       if (prevBtn) prevBtn.disabled = currentIndex === 0;
       if (nextBtn) nextBtn.disabled = currentIndex === QUIZ_DATA.length - 1;
 
-      // Render Questions
       let html = '';
       topic.questions.forEach(q => {{
         const runs = q.runs;
@@ -1228,15 +1353,11 @@ html_content = f"""<!DOCTYPE html>
       }});
 
       questionsContainer.innerHTML = html;
-
-      // Update Highlights
       updateActiveSelectorUI();
-
-      // Scroll window to top
       window.scrollTo({{ top: 0, behavior: 'smooth' }});
     }}
 
-    // RENDER SELECTORS (Grid & List)
+    // RENDER SELECTORS
     function renderAllSelectors() {{
       const filtered = QUIZ_DATA.filter(t => {{
         if (!searchQuery) return true;
@@ -1246,7 +1367,6 @@ html_content = f"""<!DOCTYPE html>
                (t.sprint && t.sprint.toLowerCase().includes(q));
       }});
 
-      // Strict Number Only Grid HTML (Zero Overlapping, Crisp 5 columns)
       const makeGridHtml = () => {{
         if (filtered.length === 0) {{
           return `<div style="grid-column: 1 / -1; padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.88rem;">कोई विषय नहीं मिला</div>`;
@@ -1269,7 +1389,6 @@ html_content = f"""<!DOCTYPE html>
         }}).join('');
       }};
 
-      // Clean List HTML
       const makeListHtml = () => {{
         if (filtered.length === 0) {{
           return `<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.88rem;">कोई विषय नहीं मिला</div>`;
@@ -1300,28 +1419,34 @@ html_content = f"""<!DOCTYPE html>
       if (mobileTopicsList) mobileTopicsList.innerHTML = listHtml;
     }}
 
-    // UPDATE ACTIVE STATE IN SELECTORS
+    // RENDER NO-BALL MODAL
+    function renderNoBallModal() {{
+      if (!noBallModalList) return;
+      noBallModalList.innerHTML = NO_BALL_DATA.map(nb => `
+        <div class="noball-card-ui">
+          <div class="noball-card-top">
+            <span class="noball-card-badge">⚾ नो बॉल #${{nb.id}}</span>
+            <span class="noball-rule-tag">नो बॉल: 1 रन • पहेली उत्तर: 2 रन</span>
+          </div>
+          <div class="noball-q">💡 <b>पहेली:</b> "${{escapeHtml(nb.paheli).replace(/\\n/g, '<br>')}}"</div>
+          <div class="noball-ans">✨ <b>उत्तर:</b> ${{escapeHtml(nb.answer)}}</div>
+        </div>
+      `).join('');
+    }}
+
+    // UPDATE ACTIVE STATE
     function updateActiveSelectorUI() {{
       document.querySelectorAll('.num-btn').forEach(btn => {{
         const btnIdx = parseInt(btn.getAttribute('data-idx'), 10);
-        if (btnIdx === currentIndex) {{
-          btn.classList.add('active');
-        }} else {{
-          btn.classList.remove('active');
-        }}
+        btn.classList.toggle('active', btnIdx === currentIndex);
       }});
 
       document.querySelectorAll('.list-item-btn').forEach(btn => {{
         const btnIdx = parseInt(btn.getAttribute('data-idx'), 10);
-        if (btnIdx === currentIndex) {{
-          btn.classList.add('active');
-        }} else {{
-          btn.classList.remove('active');
-        }}
+        btn.classList.toggle('active', btnIdx === currentIndex);
       }});
     }}
 
-    // PREVIEW ON HOVER
     function setPreviewHover(idx) {{
       const topic = QUIZ_DATA[idx];
       if (topic && desktopPreviewBar) {{
@@ -1329,7 +1454,6 @@ html_content = f"""<!DOCTYPE html>
       }}
     }}
 
-    // SWITCH VIEW MODE (Desktop)
     function setViewMode(mode) {{
       currentViewMode = mode;
       document.getElementById('modeGridBtn').classList.toggle('active', mode === 'grid');
@@ -1338,7 +1462,6 @@ html_content = f"""<!DOCTYPE html>
       desktopTopicsList.style.display = mode === 'list' ? 'flex' : 'none';
     }}
 
-    // SWITCH VIEW MODE (Mobile)
     function setMobileViewMode(mode) {{
       mobileViewMode = mode;
       document.getElementById('mobileModeGridBtn').classList.toggle('active', mode === 'grid');
@@ -1347,12 +1470,11 @@ html_content = f"""<!DOCTYPE html>
       mobileTopicsList.style.display = mode === 'list' ? 'flex' : 'none';
     }}
 
-    // NAVIGATION
     function goToTopicIndex(index) {{
       if (index >= 0 && index < QUIZ_DATA.length) {{
         currentIndex = index;
         renderCurrentTopic();
-        toggleMobileModal(false);
+        closeAllModals();
       }}
     }}
 
@@ -1373,20 +1495,18 @@ html_content = f"""<!DOCTYPE html>
       goToTopicIndex(randIdx);
     }}
 
-    // SEARCH FILTER
     function handleSearch(val) {{
       searchQuery = val;
       renderAllSelectors();
       updateActiveSelectorUI();
     }}
 
-    // MOBILE MODAL TOGGLE
     function toggleMobileModal(show) {{
       if (show) {{
+        closeAllModals();
         mobileModalOverlay.classList.add('open');
         mobileModal.classList.add('open');
         document.body.style.overflow = 'hidden';
-        
         const input = document.getElementById('mobileSearchInput');
         if (input) {{
           input.value = '';
@@ -1401,7 +1521,26 @@ html_content = f"""<!DOCTYPE html>
       }}
     }}
 
-    // THEME TOGGLE
+    function toggleNoBallModal(show) {{
+      if (show) {{
+        closeAllModals();
+        mobileModalOverlay.classList.add('open');
+        noBallModal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }} else {{
+        mobileModalOverlay.classList.remove('open');
+        noBallModal.classList.remove('open');
+        document.body.style.overflow = '';
+      }}
+    }}
+
+    function closeAllModals() {{
+      mobileModalOverlay.classList.remove('open');
+      mobileModal.classList.remove('open');
+      noBallModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }}
+
     function toggleTheme() {{
       const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -1417,7 +1556,6 @@ html_content = f"""<!DOCTYPE html>
       }}
     }}
 
-    // KEYBOARD NAVIGATION
     function setupKeyboardNavigation() {{
       window.addEventListener('keydown', (e) => {{
         if (e.target.tagName === 'INPUT') return;
@@ -1426,12 +1564,11 @@ html_content = f"""<!DOCTYPE html>
         }} else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {{
           prevTopic();
         }} else if (e.key === 'Escape') {{
-          toggleMobileModal(false);
+          closeAllModals();
         }}
       }});
     }}
 
-    // HELPER: HTML ESCAPE
     function escapeHtml(str) {{
       if (!str) return '';
       return str
@@ -1442,7 +1579,6 @@ html_content = f"""<!DOCTYPE html>
         .replace(/'/g, '&#039;');
     }}
 
-    // START ON LOAD
     window.addEventListener('DOMContentLoaded', initApp);
   </script>
 </body>
@@ -1452,4 +1588,4 @@ html_content = f"""<!DOCTYPE html>
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(html_content)
 
-print("Regenerated index.html with minmax(0, 1fr) grid and zero horizontal overflow.")
+print("Regenerated index.html with No-Ball modal and quiz data.")

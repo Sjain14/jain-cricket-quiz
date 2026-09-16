@@ -40,6 +40,7 @@
       page-break-after: avoid;
     }
 
+    /* STANDARD QUESTION CARD */
     .chit-card {
       border: 1.5px dashed #475569;
       border-radius: 6px;
@@ -103,6 +104,91 @@
       border: 1px solid #cbd5e1;
       display: inline-block;
       margin-right: 2px;
+    }
+
+    /* NO-BALL CARDS CONTAINER (2 half-cards per slot) */
+    .noball-slot-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3mm;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .noball-card {
+      border: 1.5px dashed #dc2626;
+      border-radius: 6px;
+      padding: 5px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fffafa;
+      flex: 1;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .noball-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #fca5a5;
+      padding-bottom: 3px;
+      margin-bottom: 3px;
+      flex-shrink: 0;
+    }
+
+    .noball-title-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .noball-badge {
+      font-size: 10.5pt;
+      font-weight: 800;
+      color: #dc2626;
+      font-family: 'Outfit', 'Noto Sans Devanagari', sans-serif;
+      letter-spacing: 0.01em;
+    }
+
+    .noball-score-pill {
+      font-size: 7.8pt;
+      font-weight: 700;
+      color: #991b1b;
+      background: #fee2e2;
+      padding: 1px 5px;
+      border-radius: 3px;
+      border: 0.5px solid #f87171;
+    }
+
+    .noball-cut {
+      font-size: 7.5pt;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .noball-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .paheli-title-tag {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #b91c1c;
+      text-transform: uppercase;
+    }
+
+    .paheli-text {
+      font-size: 9.8pt;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1.28;
     }
   </style>
 </head>
@@ -1120,6 +1206,102 @@
         </div>
       </div>
     
+        <div class="noball-slot-container">
+          <!-- No Ball Card 1 -->
+          <div class="noball-card">
+            <div class="noball-header">
+              <div class="noball-title-row">
+                <span class="noball-badge">⚾ नो बॉल #1</span>
+                <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
+              </div>
+              <span class="noball-cut">✂ कट लाइन</span>
+            </div>
+            <div class="noball-body">
+              <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
+              <div class="paheli-text">एक अक्षर का मेरा नाम, मैं हूँ पंच प्रभु का धाम।<br>सब जन करते मेरा ध्यान, बताओ तुम मेरा नाम?</div>
+            </div>
+          </div>
+
+          <!-- No Ball Card 2 -->
+          <div class="noball-card">
+            <div class="noball-header">
+              <div class="noball-title-row">
+                <span class="noball-badge">⚾ नो बॉल #2</span>
+                <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
+              </div>
+              <span class="noball-cut">✂ कट लाइन</span>
+            </div>
+            <div class="noball-body">
+              <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
+              <div class="paheli-text">जहाँ वाणी प्रकट प्रभु की, छः अक्षर का मेरा नाम।<br>गौतम जहाँ गणधर हुए, तीर्थंकर का भव्य धाम। बताओ क्या?</div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="noball-slot-container">
+          <!-- No Ball Card 1 -->
+          <div class="noball-card">
+            <div class="noball-header">
+              <div class="noball-title-row">
+                <span class="noball-badge">⚾ नो बॉल #3</span>
+                <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
+              </div>
+              <span class="noball-cut">✂ कट लाइन</span>
+            </div>
+            <div class="noball-body">
+              <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
+              <div class="paheli-text">आठ गुणों को प्राप्त किया है, निराकार पद धार लिया है।<br>अब न कभी जग में आना, सिद्धशिला पर धाम बनाना। बताओ कौन?</div>
+            </div>
+          </div>
+
+          <!-- No Ball Card 2 -->
+          <div class="noball-card">
+            <div class="noball-header">
+              <div class="noball-title-row">
+                <span class="noball-badge">⚾ नो बॉल #4</span>
+                <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
+              </div>
+              <span class="noball-cut">✂ कट लाइन</span>
+            </div>
+            <div class="noball-body">
+              <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
+              <div class="paheli-text">जिसके सिर पर मैं हूँ आता, उसके होंठ-भुजा फड़काता।<br>आँखें लाल विवेक मिटाता, छोटा-बड़ा न कोई सुहाता। बताओ कौन?</div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="noball-slot-container">
+          <!-- No Ball Card 1 -->
+          <div class="noball-card">
+            <div class="noball-header">
+              <div class="noball-title-row">
+                <span class="noball-badge">⚾ नो बॉल #5</span>
+                <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
+              </div>
+              <span class="noball-cut">✂ कट लाइन</span>
+            </div>
+            <div class="noball-body">
+              <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
+              <div class="paheli-text">तीन लोक में अनुपम हूँ, तीनों लोकों का मैं सार।<br>जिसने मुझको जान लिया, वही उतरे भव के पार। बताओ कौन?</div>
+            </div>
+          </div>
+
+          <!-- No Ball Card 2 -->
+          <div class="noball-card">
+            <div class="noball-header">
+              <div class="noball-title-row">
+                <span class="noball-badge">⚾ नो बॉल #6</span>
+                <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
+              </div>
+              <span class="noball-cut">✂ कट लाइन</span>
+            </div>
+            <div class="noball-body">
+              <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
+              <div class="paheli-text">ज्ञान का पावन सागर हूँ, जिनवर की वाणी कहलाऊँ।<br>अज्ञान तिमिर को दूर करूँ, मोक्ष मार्ग दिखलाऊँ। बताओ कौन?</div>
+            </div>
+          </div>
+        </div>
+      
     </div>
   
 </body>
