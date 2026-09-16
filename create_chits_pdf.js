@@ -3,43 +3,7 @@ const path = require('path');
 const puppeteer = require('puppeteer-core');
 
 const data = JSON.parse(fs.readFileSync('quiz_data.json', 'utf-8'));
-
-// 6 Jain Gyan Paheliyan for No-Ball chits
-const NO_BALL_PAHELIYAN = [
-  {
-    id: 1,
-    paheli: 'एक अक्षर का मेरा नाम, मैं हूँ पंच प्रभु का धाम।\nसब जन करते मेरा ध्यान, बताओ तुम मेरा नाम?',
-    answer: 'ॐ (पंच परमेष्ठी का प्रतीक)'
-  },
-  {
-    id: 2,
-    paheli: 'जहाँ वाणी प्रकट प्रभु की, छः अक्षर का मेरा नाम।\nगौतम जहाँ गणधर हुए, तीर्थंकर का भव्य धाम। बताओ क्या?',
-    answer: 'समवशरण'
-  },
-  {
-    id: 3,
-    paheli: 'आठ गुणों को प्राप्त किया है, निराकार पद धार लिया है।\nअब न कभी जग में आना, सिद्धशिला पर धाम बनाना। बताओ कौन?',
-    answer: 'सिद्ध भगवान'
-  },
-  {
-    id: 4,
-    paheli: 'जिसके सिर पर मैं हूँ आता, उसके होंठ-भुजा फड़काता।\nआँखें लाल विवेक मिटाता, छोटा-बड़ा न कोई सुहाता। बताओ कौन?',
-    answer: 'क्रोध (कषाय)'
-  },
-  {
-    id: 5,
-    paheli: 'तीन लोक में अनुपम हूँ, तीनों लोकों का मैं सार।\nजिसने मुझको जान लिया, वही उतरे भव के पार। बताओ कौन?',
-    answer: 'आत्मा (शुद्ध चेतन)'
-  },
-  {
-    id: 6,
-    paheli: 'ज्ञान का पावन सागर हूँ, जिनवर की वाणी कहलाऊँ।\nअज्ञान तिमिर को दूर करूँ, मोक्ष मार्ग दिखलाऊँ। बताओ कौन?',
-    answer: 'जिनवाणी / शास्त्र'
-  }
-];
-
-// Save No-Ball Paheliyan to JSON for project consistency
-fs.writeFileSync('no_ball_paheliyan.json', JSON.stringify(NO_BALL_PAHELIYAN, null, 2), 'utf-8');
+const NO_BALL_PAHELIYAN = JSON.parse(fs.readFileSync('no_ball_paheliyan.json', 'utf-8'));
 
 const CHITS_PER_PAGE = 8;
 const pages = [];
@@ -67,7 +31,6 @@ pages.forEach((pageChits, pIdx) => {
       <div class="chit-card">
         <div class="chit-header">
           <div class="chit-title">🏏 प्रश्न संख्या ${chit.number}</div>
-          <div class="cut-guide">✂ कट लाइन</div>
         </div>
         <div class="chit-body">
           ${questionsHtml}
@@ -92,7 +55,6 @@ pages.forEach((pageChits, pIdx) => {
                 <span class="noball-badge">⚾ नो बॉल #${p1.id}</span>
                 <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
               </div>
-              <span class="noball-cut">✂ कट लाइन</span>
             </div>
             <div class="noball-body">
               <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
@@ -107,7 +69,6 @@ pages.forEach((pageChits, pIdx) => {
                 <span class="noball-badge">⚾ नो बॉल #${p2.id}</span>
                 <span class="noball-score-pill">नो बॉल: 1 रन • पहेली: 2 रन</span>
               </div>
-              <span class="noball-cut">✂ कट लाइन</span>
             </div>
             <div class="noball-body">
               <div class="paheli-title-tag">💡 ज्ञान पहेली:</div>
@@ -200,13 +161,6 @@ const htmlContent = `<!DOCTYPE html>
       letter-spacing: 0.01em;
     }
 
-    .cut-guide {
-      font-size: 8pt;
-      color: #64748b;
-      font-family: 'Noto Sans Devanagari', sans-serif;
-      font-weight: 600;
-    }
-
     .chit-body {
       display: flex;
       flex-direction: column;
@@ -270,7 +224,8 @@ const htmlContent = `<!DOCTYPE html>
     .noball-title-row {
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
+      width: 100%;
     }
 
     .noball-badge {
@@ -282,19 +237,13 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     .noball-score-pill {
-      font-size: 7.8pt;
+      font-size: 8pt;
       font-weight: 700;
       color: #991b1b;
       background: #fee2e2;
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: 3px;
       border: 0.5px solid #f87171;
-    }
-
-    .noball-cut {
-      font-size: 7.5pt;
-      color: #94a3b8;
-      font-weight: 600;
     }
 
     .noball-body {
